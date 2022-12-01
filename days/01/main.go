@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"embed"
 	"fmt"
 	"sort"
@@ -13,24 +12,19 @@ import (
 //go:embed input_test.txt
 var fsys embed.FS
 
-func fileLines(fname string) (lines []string) {
-	content, err := fsys.ReadFile(fname)
+func fileScanner(fname string) *bufio.Scanner {
+	file, err := fsys.Open(fname)
 	if err != nil {
 		panic(err) // Not great, better error handling!
 	}
-	scanner := bufio.NewScanner(bytes.NewReader(content))
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
+	return bufio.NewScanner(file)
 }
 
-func calorieSums(fname string) (calorie_sums []int) {
-	lines := fileLines(fname)
-	calorie_sums = append(calorie_sums, 0)
-	for _, line := range lines {
-		text := line
-		value, err := strconv.Atoi(text)
+func calorieSums(fname string) []int {
+	scanner := fileScanner(fname)
+	calorie_sums := []int{0}
+	for scanner.Scan() {
+		value, err := strconv.Atoi(scanner.Text())
 		if err != nil {
 			// This is probably not okay :'D
 			calorie_sums = append(calorie_sums, 0)
@@ -38,17 +32,20 @@ func calorieSums(fname string) (calorie_sums []int) {
 		calorie_sums[len(calorie_sums)-1] += value
 
 	}
+	if err := scanner.Err(); err != nil {
+		panic(err)
+	}
 	sort.Slice(calorie_sums, func(i, j int) bool {
 		return calorie_sums[i] > calorie_sums[j]
 	})
 	return calorie_sums
 }
 
-func Part1(fname string) (calories int) {
+func Part1(fname string) int {
 	return calorieSums(fname)[0]
 }
 
-func Part2(fname string) (calories int) {
+func Part2(fname string) int {
 	sum := 0
 	for _, cals := range calorieSums(fname)[:3] {
 		sum += cals
