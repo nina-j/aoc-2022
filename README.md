@@ -1,2 +1,2 @@
-# aoc-2023
-Advent of Code 2023 in Go
+# aoc-2022
+Advent of Code 2022 in Go
