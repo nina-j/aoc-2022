@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bufio"
+	util "aoc/util"
 	"embed"
 	"fmt"
 	"sort"
@@ -12,16 +12,8 @@ import (
 //go:embed input_test.txt
 var fsys embed.FS
 
-func fileScanner(fname string) *bufio.Scanner {
-	file, err := fsys.Open(fname)
-	if err != nil {
-		panic(err) // Not great, better error handling!
-	}
-	return bufio.NewScanner(file)
-}
-
 func calorieSums(fname string) []int {
-	scanner := fileScanner(fname)
+	scanner := util.FileScanner(fname, fsys)
 	calorie_sums := []int{0}
 	for scanner.Scan() {
 		value, err := strconv.Atoi(scanner.Text())
