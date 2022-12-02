@@ -74,17 +74,15 @@ func Part2(fname string) int {
 	sum := 0
 	for scanner.Scan() {
 		strat := strings.Split(scanner.Text(), " ")
+		stratMap := getStratMap(strat[0])
 		switch strat[1] {
 		case "X": // lose
-			stratMap := getStratMap(strat[0])
 			// they win (6)
 			sum += getPoints(6, stratMap) + 0
 		case "Y": //draw
-			stratMap := getStratMap(strat[0])
 			// draw (3)
 			sum += getPoints(3, stratMap) + 3
 		case "Z": // win
-			stratMap := getStratMap(strat[0])
 			// they lose (0)
 			sum += getPoints(0, stratMap) + 6
 		}
